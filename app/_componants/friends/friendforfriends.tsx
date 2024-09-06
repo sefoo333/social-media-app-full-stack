@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 
 interface props {
     l222l: boolean,
+    id:string,
 }
 function FriendsFF(props: props) {
 
