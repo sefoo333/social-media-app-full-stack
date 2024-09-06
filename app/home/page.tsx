@@ -367,6 +367,7 @@ function page() {
                     <div className="center  mt-[50px] max-sm:w-[330px] max-sm:flex max-sm:items-center max-sm:flex-col ">
                         <CreatePost l222l={l222l} />
 
+                        
                         <div className="posts  mt-6  p-7 rounded-3xl max-sm:w-full">
 
 
@@ -375,9 +376,10 @@ function page() {
                                 <>
                                     {
                                         datapost.map((a: any) => (
-                                            <Post
+                                            <Link href={`/post/${a.id}`}>
+                                                <Post
                                                     key={a.id}
-
+                                                    you={user[3].id}
                                                     username={user3[0].username}
                                                     imageofuser={user3[0].image}
                                                     imageofpublisher={a.imageofpublisher}
@@ -394,22 +396,23 @@ function page() {
                                                     createdAt={a.createdAt}
                                                     source={user3[0].id}
                                                 />
+                                            </Link>
                                         ))
                                     }
                                 </>
                             ))}
 
 
-                            <div className="showmore text-center mt-[15px]">
-                                <span onClick={() => { showmore() }}
-                                    className="pb-[5px] border-b-white border-b-[1px]"
-                                >Show more...</span>
-                            </div>
 
 
 
 
 
+                        </div>
+                        <div className="showmore text-center mt-[15px] mb-[30px]">
+                            <span onClick={() => { showmore() }}
+                                className="pb-[5px] border-b-white border-b-[1px]"
+                            >Show more...</span>
                         </div>
                     </div>
 
