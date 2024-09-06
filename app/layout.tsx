@@ -33,7 +33,7 @@ export default function RootLayout({ children }: any) {
       let l: any = localStorage.getItem("darkmode")
       if (user || user2 !== null || user2 !== undefined ) {
         setData(true)
-
+console.log("signed")
         if (!localStorage.getItem("likes")) {
           localStorage.setItem("likes", JSON.stringify([]))
         }
