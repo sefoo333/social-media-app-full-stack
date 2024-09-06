@@ -138,13 +138,13 @@ function page({ params }: any) {
         }
     }
 
-    useEffect(() => {
+   useEffect(() => {
         const aaa = async () => {
-            let t2: any = await (await getDoc((doc(db, "users", user?.uid)))).data();
+            let t2: any = await (await getDoc((doc(db, "users", `${user?.uid}`)))).data();
             setOpen(t2.Requestopen);
         }
         aaa();
-    }, [])
+    }, [user2])
 
 
     let [l222l, setl222l] = useState(false)
