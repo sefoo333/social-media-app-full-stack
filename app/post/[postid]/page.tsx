@@ -32,6 +32,8 @@ function page({ params }: any) {
         let post = await (await getDoc((doc(db, "posts", `${params.postid}`)))).data();
         setObject(post)
     }
+
+    console.log("this is" , params.postid)
     useEffect(() => {
         return () => {
             getData();
