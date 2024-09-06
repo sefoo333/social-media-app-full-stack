@@ -36,7 +36,7 @@ function Navbar() {
     let [open, setOpen] = useState(false);
     return (
         <header className="bg-white z-[9999999999999]" style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
-            <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8" style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
                 <div className="flex h-16 items-center justify-between">
                     <div className={`md:flex md:items-center md:gap-12 ${inter.className}`}>
                         <h1 className='font-bold text-[30px] uppercase text-[#6451f7] italic' >
@@ -44,9 +44,9 @@ function Navbar() {
                         </h1>
                     </div>
 
-                    <div className="hidden md:block ccc">
-                        <nav aria-label="Global">
-                            <ul className="flex items-center gap-6 text-sm">
+                    <div className="hidden md:block ccc" style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
+                        <nav aria-label="Global" style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
+                            <ul className="flex items-center gap-6 text-sm" style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
                                 <li className='p-[10px] ml-[15px] text-[25px] '>
                                     <Link className="text-gray-500 transition hover:text-gray-500/75" href="/home">  <IoHomeOutline />
                                     </Link>
