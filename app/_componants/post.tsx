@@ -117,9 +117,9 @@ function Post(props: any) {
 
     useEffect(() => {
         const getlog = async () => {
+                let t1 = await (await getDoc((doc(db, "likeslog", `${datauser[0]?.id}`)))).data();
             if (datauser[0] !== null || datauser[0] !== undefined) {
 
-                let t1 = await (await getDoc((doc(db, "likeslog", datauser[0]?.id)))).data();
 
                 if (t1?.likes?.length > 0) {
                     let filter = t1?.likes?.filter((e: { postid: number, id: number }) => {
