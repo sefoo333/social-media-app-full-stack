@@ -38,7 +38,6 @@ function page({ params }: any) {
     console.log("this is" , params.postid)
     console.log("this is" , objectt)
             getData();
-      }
     }, [params.postid])
 
     let [l222l, setl222l] = useState(false)
