@@ -115,9 +115,10 @@ function Post(props: any) {
 
     let ttr2: any = [];
 
-    useEffect(() => {
+   useEffect(() => {
         const getlog = async () => {
             let t1 = await (await getDoc((doc(db, "likeslog", `${props.you}`)))).data();
+            if (datauser[0] !== null || datauser[0] !== undefined) {
                 if (t1?.likes?.length > 0) {
                     let filter = t1?.likes?.filter((e: { postid: number, id: number }) => {
                         return e.postid === props.id
@@ -134,11 +135,10 @@ function Post(props: any) {
                     console.log(ttr)
                 }
             }
-        
-
-        return () => {
-            getlog();
         }
+
+        getlog();
+
     }, [])
 
     let [conf, setConfirm] = useState(false);
