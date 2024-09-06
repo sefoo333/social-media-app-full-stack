@@ -67,10 +67,10 @@ function profile({ params }: any) {
         }
 
 
-        return () => {
-            getData2()
-        }
-    }, [data])
+       
+         getData2()
+        
+    }, [])
 
 
 
