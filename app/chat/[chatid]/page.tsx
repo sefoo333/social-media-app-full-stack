@@ -22,7 +22,7 @@ function chat({ params }: any) {
     let [image, setImage] = useState("");
     let [name, setName] = useState("");
 
-    useEffect(() => {
+       useEffect(() => {
         const getData = async () => {
             let t: any = await (await getDoc((doc(db, "userschat", `${user[0]?.id}`)))).data();
             let filterr = t?.chat?.filter((e: { chatid: string }) => e.chatid === params.chatid)[0];
@@ -31,6 +31,9 @@ function chat({ params }: any) {
             setImage(t2?.image)
             setName(t2?.username)
         }
+
+            getData()
+    }, [])
 
         return () => {
             getData()
