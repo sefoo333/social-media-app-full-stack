@@ -36,7 +36,7 @@ function page({ params }: any) {
     useEffect(() => {
     console.log("this is" , params.postid)
     console.log("this is" , objectt)
-      if (object !== null){
+      if (objectt !== null){
             return () => {
             getData();
         }
@@ -56,7 +56,7 @@ function page({ params }: any) {
     return (
         <div className='w-full h-screen flex justify-center items-center'>
             <Post
-                key={object.id}
+                key={objectt.id}
 
                 username={user3[0]?.username}
                 imageofuser={user3[0]?.image}
