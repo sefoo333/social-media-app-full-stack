@@ -4,7 +4,7 @@ import { Roboto, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import Footer from "./_componants/footer";
 import Navbar from "./_componants/navbar";
-import { createContext, Suspense, useEffect, useState } from "react";
+import { createContext,useContext, Suspense, useEffect, useState } from "react";
 import { auth, db } from "./_config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
