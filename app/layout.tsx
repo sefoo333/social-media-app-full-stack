@@ -49,9 +49,7 @@ export default function RootLayout({ children }: any) {
     }, (error) => {
       console.log("error", error)
     })
-    return () => {
       isloged222222()
-    }
   }, [])
 
   let [l222l, setl222l] = useState(false)
