@@ -376,7 +376,6 @@ function page() {
                                 <>
                                     {
                                         datapost.map((a: any) => (
-                                            <Link href={`/post/${a.id}`}>
                                                 <Post
                                                     key={a.id}
                                                     you={user[3].id}
@@ -396,7 +395,6 @@ function page() {
                                                     createdAt={a.createdAt}
                                                     source={user3[0].id}
                                                 />
-                                            </Link>
                                         ))
                                     }
                                 </>
