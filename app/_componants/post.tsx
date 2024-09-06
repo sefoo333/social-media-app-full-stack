@@ -210,11 +210,11 @@ function Post(props: any) {
                         </div>
                     </div>
 
-   <Link href={`/post/${a.id}`}>
                     <div className="content p-[10px] leading-[2]">
+   <Link href={`/post/${a.id}`}>
                         <p>{props.postname}</p>
-                    </div>
        </Link>
+                    </div>
 
                 </div>
                 {props.imagepost !== "/" ? (
