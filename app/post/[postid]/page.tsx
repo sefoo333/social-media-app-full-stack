@@ -26,7 +26,7 @@ function page({ params }: any) {
             test()
         }
     }, [])
-    const [objectt, setObject]: any = useState(null)
+    const [objectt, setObject]: any = useState({})
     const user3: any = useContext(Data)
     const getData = async () => {
         let post = await (await getDoc((doc(db, "posts", `${params.postid}`)))).data();
