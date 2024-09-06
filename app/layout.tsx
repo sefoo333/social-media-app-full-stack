@@ -24,7 +24,7 @@ const inter = Roboto({
 
 export default function RootLayout({ children }: any) {
 
-  let [data, setData] = useState(false)
+  let [data, setData] = useState(true)
     let user2 = useContext(Data)
 
 
