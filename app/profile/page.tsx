@@ -118,6 +118,7 @@ function profile() {
                                         posts.map((a: any) => (
                                             <Post
                                                 key={a.id}
+                                                    you={user3[0].id}
 
                                                 username={user3[0].username}
                                                 imageofuser={user3[0].image}
