@@ -35,7 +35,7 @@ function Navbar() {
     let user: { image: string } | any = useContext(Data)
     let [open, setOpen] = useState(false);
     return (
-        <header className="bg-white " style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
+        <header className="bg-white z-[9999999999999]" style={l222l ? { backgroundColor: "#242526", color: "white", zIndex: "9999" } : { zIndex: "9999" }}>
             <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     <div className={`md:flex md:items-center md:gap-12 ${inter.className}`}>
