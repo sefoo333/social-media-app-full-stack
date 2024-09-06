@@ -216,7 +216,7 @@ export default function Home() {
                       <div className="relative">
                         <input
                           type="text"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black"
                           placeholder="Type your name"
                           required
                           onChange={(e: { target: { value: string } }) => {
@@ -246,7 +246,7 @@ export default function Home() {
 
                   }
                   type="email"
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black"
                   placeholder="Type your email"
 
                 />
@@ -278,7 +278,7 @@ export default function Home() {
               <div className="relative">
                 <input
                   type={seepassword ? "password" : "text"}
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm text-black"
                   placeholder="Type your password"
                   required
                   onChange={(e) => {
