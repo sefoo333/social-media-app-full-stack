@@ -368,7 +368,7 @@ function page() {
                         <CreatePost l222l={l222l} />
 
                         
-                        <div className="posts  mt-6  p-7 rounded-3xl max-sm:w-full">
+                        <div className="posts  mt-6  p-7 rounded-3xl max-sm:w-full flex flex-col-reverse">
 
 
 
