@@ -118,9 +118,6 @@ function Post(props: any) {
     useEffect(() => {
         const getlog = async () => {
                 let t1 = await (await getDoc((doc(db, "likeslog", `${datauser[0]?.id}`)))).data();
-            if (datauser[0] !== null || datauser[0] !== undefined) {
-
-
                 if (t1?.likes?.length > 0) {
                     let filter = t1?.likes?.filter((e: { postid: number, id: number }) => {
                         return e.postid === props.id
@@ -130,6 +127,8 @@ function Post(props: any) {
                         if (filter.length > 0) {
                             setLiked(filter[filter.length - 1].isliked)
                         }
+                    } else {
+console.log("failed")
                     }
 
                     localStorage.setItem("likes", JSON.stringify(t1?.likes));
@@ -142,7 +141,7 @@ function Post(props: any) {
         return () => {
             getlog();
         }
-    }, [datauser[0]])
+    }, [])
 
     let [conf, setConfirm] = useState(false);
 
