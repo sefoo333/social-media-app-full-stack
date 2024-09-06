@@ -37,10 +37,7 @@ function page({ params }: any) {
     }
     console.log("this is" , params.postid)
     console.log("this is" , objectt)
-      if (objectt !== null){
-            return () => {
             getData();
-        }
       }
     }, [params.postid])
 
