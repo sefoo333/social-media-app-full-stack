@@ -24,16 +24,16 @@ const inter = Roboto({
 
 export default function RootLayout({ children }: any) {
 
-  let [data, setData] = useState(true)
+  let [data, setData] = useState(false)
     let user2 = useContext(Data)
 
 
-  useEffect(() => {
-    const isloged = () => onAuthStateChanged(auth, (user) => {
+    useEffect(() => {
+    const isloged222222 = () => onAuthStateChanged(auth, (user) => {
       let l: any = localStorage.getItem("darkmode")
-      if (user || user2 !== null || user2 !== undefined ) {
+      if (user) {
         setData(true)
-console.log("signed")
+
         if (!localStorage.getItem("likes")) {
           localStorage.setItem("likes", JSON.stringify([]))
         }
@@ -50,9 +50,9 @@ console.log("signed")
       console.log("error", error)
     })
     return () => {
-      isloged()
+      isloged222222()
     }
-  }, [user2])
+  }, [])
 
   let [l222l, setl222l] = useState(false)
 
