@@ -67,7 +67,7 @@ function profile({ params }: any) {
         }
 
 
-        return getData2()
+        return () =>getData2()
     }, [data])
 
 
