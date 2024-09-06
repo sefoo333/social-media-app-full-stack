@@ -378,7 +378,7 @@ function page() {
                                         datapost.map((a: any) => (
                                                 <Post
                                                     key={a.id}
-                                                    you={user[3].id}
+                                                    you={user3[0].id}
                                                     username={user3[0].username}
                                                     imageofuser={user3[0].image}
                                                     imageofpublisher={a.imageofpublisher}
