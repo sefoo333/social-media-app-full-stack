@@ -424,9 +424,7 @@ function page() {
                                 {friends.map((e: any, index: number) => (
                                     <Link href={`/${e.id}`}>
                                         <FriendsFF2
-                                            namefriend={e.name}
                                             id={e.id}
-                                            image={e.image}
                                             l222l={l222l}
                                         />
                                     </Link>
