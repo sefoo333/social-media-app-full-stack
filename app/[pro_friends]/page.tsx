@@ -306,6 +306,7 @@ function profile({ params }: any) {
                                     key={a.id}
                                     source={data[0].id}
                                     username={data[0].username}
+                                                                                        you={data[0].id}
                                     imageofuser={data[0].image}
                                     imageofpublisher={a.imageofpublisher}
                                     nameofpublish={a.nameofpublish}
