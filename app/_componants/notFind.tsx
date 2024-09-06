@@ -4,7 +4,7 @@ import { TbMoodEmpty } from "react-icons/tb";
 function NotFind(props: any) {
     return (
         <>
-            <div className="grid h-full place-content-center  px-4">
+            <div className="grid h-full place-content-center  px-4" >
                 <div className="text-center flex flex-col items-center">
                     <h1 className="text-7xl font-black text-gray-200"><TbMoodEmpty /></h1>
 

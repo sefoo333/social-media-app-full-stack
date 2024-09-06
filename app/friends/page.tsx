@@ -2,10 +2,11 @@
 
 import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { auth, db } from '../_config/firebase';
 import { Data, Data2, Data3 } from '../_context/Context';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import FriendsFF from '../_componants/friends/friendforfriends';
 
 
 
@@ -120,10 +121,17 @@ function friends() {
             requests: filter_t
         })
     }
+    let [l222l, setl222l] = useState(false)
 
+
+    let l222l2: any = ""
+    useEffect(() => {
+        l222l2 = localStorage.getItem("darkmode")
+        setl222l(JSON.parse(l222l2));
+    }, [])
 
     return (
-        <div className="parent px-[50px] flex flex-col ">
+        <div className="parent px-[50px] flex flex-col " style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
             <div className="one">
                 <div className="main px-[15px] py-[10px] uppercase font-[600] border-b-[2px] my-3 w-[250px] text-[25px] border-b-black">
                     <h1>Friends List</h1>
@@ -132,16 +140,12 @@ function friends() {
                     <div className="list grid grid-cols-5 items-center justify-center  gap-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 max-2xl:justify-items-center">
                         {userdata.map((e: any) => (
                             <Link href={`/${e.id}`}>
-                                <div className="friend w-[200px] bg-white flex flex-col items-center shadow-elementbefore p-5 rounded-xl transition-all hover:bg-[#77E4C8] hover:shadow-element">
-                                    <div className="image w-[70px] h-[70px] bg-red-600 rounded-full   overflow-hidden">
-                                        <img src={e.image} alt="" />
-                                    </div>
-
-                                    <div className="text  mt-5 text-[15px] text-center  font-bold">
-                                        <h1 className='uppercase'>{e.namefriend}</h1>
-                                        <span className='text-gray-500 text-[12px] font-[500] capitalize'>Friend</span>
-                                    </div>
-                                </div>
+                                <FriendsFF
+                                    namefriend={e.name}
+                                    id={e.id}
+                                    image={e.image}
+                                    l222l={l222l}
+                                />
                             </Link>
                         ))}
                     </div>
@@ -165,7 +169,7 @@ function friends() {
                                     </div>
                                 </div>
                                 <div className="actions">
-                                    <button className='py-[7px] px-[10px] bg-buttons ml-[10px] mt-[10px] rounded-[10px] uppercase text-white text-[12px] transition hover:bg-[#2697a0]' onClick={() => {
+                                    <button className='py-[7px] px-[10px] bg-buttons ml-[10px] mt-[10px] rounded-[10px] uppercase text-white text-[12px] transition hover:bg-[#2697a0]' style={l222l ? { backgroundColor: "#242526", color: "white" } : {}} onClick={() => {
                                         console.log(user[0])
                                         addFriend(user3[0].id, i, i.id, i.idfriendsend)
                                         addfromother(i.id, i.idfriendsend)

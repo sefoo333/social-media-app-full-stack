@@ -14,6 +14,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { Data, Data2 } from '../_context/Context';
 import Link from 'next/link';
+import Post from '../_componants/post';
 
 function profile() {
     const user3: any = useContext(Data);
@@ -43,7 +44,10 @@ function profile() {
             }
 
 
-        })
+        },
+            (error) => {
+                console.log("error")
+            })
 
         return () => {
             test2()
@@ -77,13 +81,22 @@ function profile() {
         }
     }
 
+    let [l222l, setl222l] = useState(false)
+
+
+    let l222l2: any = ""
+    useEffect(() => {
+        l222l2 = localStorage.getItem("darkmode")
+        setl222l(JSON.parse(l222l2));
+    }, [])
+
 
     return (
         <>
-            <div className="parent">
+            <div className="parent" style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                 <div className="profile h-[200px] flex flex-col items-center relative">
                     <div className="banner w-[90%] h-[300px] bg-blue-700 rounded-2xl overflow-hidden">
-                        <img className='object-cover h-full w-full' src="https://images.squarespace-cdn.com/content/v1/61c4da8eb1b30a201b9669f2/1696691175374-MJY4VWB1KS8NU3DE3JK1/Sounds-of-Nature.jpg" alt="" />
+                        <img className='object-cover h-full w-full' src={user[0]?.banner} alt="" />
                     </div>
                     <div className="image_user w-[70px] h-[70px] bg-red-600 rounded-full absolute bottom-[-30px] overflow-hidden">
                         <img src={`${user[0].image}`} alt="" />
@@ -97,116 +110,32 @@ function profile() {
                 </div>
                 <div className="center flex flex-row justify-evenly items-start p-11 gap-11 max-lg:flex max-lg:flex-col-reverse max-lg:px-[20px] max-lg:items-center ">
                     <div className="sec-1 ">
-                        <CreatePost />
+                        <CreatePost l222l={l222l} />
                         <div className="posts max-lg:flex max-lg:items-center max-lg:flex-col ">
                             {user.map((e: any) => (
                                 <>
-                                    {posts.map((a: any) => (
-                                        <div className="post my-6 w-[500px] max-lg:w-full">
-                                            <div className="text">
-                                                <div className="profile flex">
-                                                    <div className="image_profile w-[40px] h-[40px] bg-red-600 rounded-full overflow-hidden">
-                                                        <img src={e.image} alt="" />
-                                                    </div>
-                                                    <div className="user ml-4">
-                                                        <h1>{e.username}</h1>
-                                                        <span>User</span>
-                                                    </div>
-                                                </div>
+                                    {
+                                        posts.map((a: any) => (
+                                            <Post
+                                                key={a.id}
 
-                                                <div className="content p-[10px] leading-[2]">
-                                                    <p>{a.postname}</p>
-                                                </div>
-
-                                            </div>
-                                            <div className="image h-[150px] rounded-2xl py-[10px] bg-slate-700"></div>
-                                            <div className="reacts_comments flex justify-between px-[20px] mt-3 border-b-[#ddd] border-b-[1px] pb-[10px]">
-                                                <div className="reacts flex items-center cursor-pointer text-[#959595]">
-                                                    <span>
-                                                        {a.likes}
-                                                    </span>
-                                                    <MdFavoriteBorder className='ml-1' />
-                                                </div>
-                                                <div className="comments cursor-pointer text-[#959595]">
-                                                    {a.commentsCount} comment
-                                                </div>
-                                            </div>
-                                            <div className="actions flex justify-between px-[15px] py-[20px]">
-                                                {liked ?
-                                                    (
-                                                        <div className="like flex items-center text-[20px] text-[#959595] cursor-pointer" onClick={() => setLiked(false)}>
-                                                            <FcLike className='mr-[10px]' />
-                                                            <span>Liked</span>
-                                                        </div>
-                                                    )
-                                                    :
-                                                    (
-                                                        <div className="like flex items-center text-[20px] text-[#959595] cursor-pointer" onClick={() => setLiked(true)}>
-                                                            <MdFavoriteBorder className='mr-[10px]' />
-                                                            <span>Like</span>
-                                                        </div>
-                                                    )
-                                                }
-                                                <div className="comment flex items-center text-[20px] text-[#959595] cursor-pointer" onClick={() => {
-                                                    openComment ? setOpenComment(false) : setOpenComment(true)
-                                                }}>
-                                                    <FaRegCommentDots className='mr-[10px]' />
-                                                    <span>Comment</span>
-                                                </div>
-
-                                            </div>
-                                            {openComment ? (
-                                                <div className="comments">
-                                                    <div className="user_comment">
-                                                        <div className="post_create flex items-center rounded-[15px] p-[20px] justify-center bg-slate-50 ">
-                                                            <form action="" onSubmit={(e: any) => {
-                                                                e.preventDefault();
-                                                                comment(a.id, a, e.target[0].value)
-                                                                e.target[0].value = ""
-                                                                setTimeout(() => {
-                                                                    location.reload()
-                                                                }, 3000)
-                                                            }}>
-                                                                <div className="top flex items-center">
-                                                                    <div className="image w-[40px] mr-3 h-[40px] bg-red-600 rounded-full overflow-hidden">
-                                                                        <img src={e.image} alt="" />
-                                                                    </div>
-                                                                    <input type="text" className="p-[8px] rounded-xl border-none outline-none w-[350px] max-lg:w-fit " placeholder='type any words' />
-                                                                </div>
-                                                                <div className="under flex justify-end items-center mt-3 overflow-hidden">
-                                                                    <input type="submit" className='py-[7px] px-[15px] bg-buttons text-white mr-3 rounded-xl transition cursor-pointer  hover:bg-[#2697a0]' value="Comment" />
-
-                                                                </div>
-
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <div className="main">
-                                                        <h1 className='text-[25px] font-bold uppercase'>Comments</h1>
-                                                    </div>
-                                                    {a.comments.map((z: any) => (
-                                                        <div className="comment p-[15px] text-justify bg-slate-400 rounded-[26px] my-[15px]" style={{ borderTopLeftRadius: "0" }}>
-                                                            <div className="profile flex items-center mb-4">
-                                                                <div className="image_profile w-[30px] h-[30px] bg-red-600 rounded-full overflow-hidden">
-                                                                    <img src={z.image} alt="" />
-                                                                </div>
-                                                                <div className="user ml-4">
-                                                                    <h1>{z.name}</h1>
-                                                                    <span>User</span>
-                                                                </div>
-                                                            </div>
-                                                            <div className="content">
-                                                                <p>{z.comment}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-
-
-                                                </div>
-                                            ) :
-                                                null}
-                                        </div>
-                                    ))}
+                                                username={user3[0].username}
+                                                imageofuser={user3[0].image}
+                                                imageofpublisher={a.imageofpublisher}
+                                                nameofpublish={a.nameofpublish}
+                                                idofpublisher={a.idofpublisher}
+                                                postname={a.postname}
+                                                imagepost={a.imagepost}
+                                                commentCount={a.commentsCount}
+                                                comments={a.comments}
+                                                likes={a.likes}
+                                                element={a}
+                                                id={a.id}
+                                                l222l={l222l}
+                                                source={user3[0].id}
+                                            />
+                                        ))
+                                    }
 
                                 </>
                             ))}
@@ -214,7 +143,7 @@ function profile() {
                     </div>
                     <div className="sec-2">
                         <div className="information flex justify-center my-7 flex-col">
-                            <div className="about_me w-[500px] p-[15px] rounded-2xl bg-slate-50 text-center  max-lg:w-fit ">
+                            <div className="about_me w-[500px] p-[15px] rounded-2xl bg-slate-50 text-center  max-lg:w-fit " style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                                 <div className="main flex justify-center  px-7 items-center">
                                     <h1 className='font-bold text-[20px] uppercase p-[10px]'>About me</h1>
                                     <FaPen className='cursor-pointer' onClick={() => edit ? openedit(false) : openedit(true)} />
@@ -233,18 +162,18 @@ function profile() {
                                                 location.reload()
                                             }, 2000)
                                         }}>
-                                            <textarea className='leading-[2] w-full resize-none'>{user[0].aboutOfMe}</textarea>
+                                            <textarea className='leading-[2] w-full resize-none' style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>{user[0].aboutOfMe}</textarea>
                                             <input type="submit" value="Edit" className='p-3 bg-buttons transition hover:#2697a0 rounded-md text-white px-4 cursor-pointer' />
                                         </form>
                                     )
                                 }
                             </div>
-                            <div className="friends flex flex-col items-center gap-5 w-[500px] my-8 bg-slate-50 rounded-2xl p-4 max-lg:w-fit ">
+                            <div className="friends flex flex-col items-center gap-5 w-[500px] my-8 bg-slate-50 rounded-2xl p-4 max-lg:w-fit " style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                                 <h1 className='font-bold text-[20px] uppercase p-[10px]'>Friends</h1>
                                 <div className="list flex flex-wrap justify-center  gap-5">
                                     {friends.map((e: any) => (
                                         <Link href={`/${e.id}`}>
-                                            <div className="friend w-[200px] bg-white flex flex-col items-center p-5 rounded-xl">
+                                            <div className="friend w-[200px] bg-white flex flex-col items-center p-5 rounded-xl" style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                                                 <div className="image w-[70px] h-[70px] bg-red-600 rounded-full   overflow-hidden">
                                                     <img src={e.image} alt="" />
                                                 </div>

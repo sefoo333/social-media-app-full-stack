@@ -26,15 +26,24 @@ export default function RootLayout({ children }: any) {
 
   let [data, setData] = useState(false)
 
+
   useEffect(() => {
     const isloged = () => onAuthStateChanged(auth, (user) => {
+      let l: any = localStorage.getItem("darkmode")
       if (user) {
         setData(true)
+
         if (!localStorage.getItem("likes")) {
           localStorage.setItem("likes", JSON.stringify([]))
         }
+        if (!localStorage.getItem("darkmode")) {
+          localStorage.setItem("darkmode", JSON.stringify(true))
+        }
       } else {
         setData(false)
+        if (JSON.parse(l)) {
+          localStorage.removeItem("darkmode")
+        }
       }
     }, (error) => {
       console.log("error", error)
@@ -44,12 +53,19 @@ export default function RootLayout({ children }: any) {
     }
   }, [])
 
+  let [l222l, setl222l] = useState(false)
 
+
+  let l222l2: any = ""
+  useEffect(() => {
+    l222l2 = localStorage.getItem("darkmode")
+    setl222l(JSON.parse(l222l2));
+  }, [])
 
   return (
     <>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={inter.className} style={l222l ? { backgroundColor: "#18191a" } : {}}>
           <DATRA>
             <>
               {data ? <Navbar /> : null}

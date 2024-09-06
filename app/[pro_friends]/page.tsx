@@ -79,47 +79,83 @@ function profile({ params }: any) {
 
     let arrFriends = [];
     const addFriend = async (id: string) => {
-        arrFriends.push(...user[0].requests, {
-            name: data[0].username,
-            id: data[0].id,
-            image: data[0].image,
-            isSent: false,
-            idfriendsend: id
-        })
-        await updateDoc(doc(db, "users", id), {
-            requests: arrFriends,
-        })
-
-    }
-
-    const checkRequest = async (id: string, idsender: string) => {
-        const getRequest: any = (await getDoc(doc(db, "users", id))).data();
-
-
-        let te = getRequest.requests.filter((e: any) => e.id === idsender)
-        console.log(te)
-
-        if (te.length > 0) {
-            setRequest("the request is aleready sent")
-        } else {
-            addFriend(user[0].id)
+        if (user[0]?.requests !== undefined) {
+            arrFriends.push(...user[0]?.requests, {
+                name: data[0].username,
+                id: data[0].id,
+                image: data[0].image,
+                isSent: false,
+                idfriendsend: id
+            })
+            await updateDoc(doc(db, "users", id), {
+                requests: arrFriends,
+            })
         }
+
     }
 
-
-
-
-    const checkISFriendorno = async (id: string, idRequest: string) => {
-        const getRequest: any = await (await getDoc(doc(db, "users", id))).data();
-        let te = getRequest.friends.filter((e: any) => e.id === idRequest);
+    const checkRequest = async () => {
+        let te = []
+        if (user[0]?.id !== undefined) {
+            const getRequest: any = await (await getDoc(doc(db, "users", user[0]?.id))).data();
+            te = getRequest.requests.filter((e: any) => e.id === data[0]?.id);
+        }
+        console.log(te)
 
         if (te.length > 0) {
             setRequest(true)
         } else {
+            addFriend(user[0].id)
             setRequest(false)
-            checkRequest(user[0].id, data[0].id)
         }
     }
+
+
+    let [friend, setFriend] = useState(false)
+
+    const checkISFriendorno = async () => {
+        let te = []
+        if (user[0]?.id !== undefined) {
+            const getRequest: any = await (await getDoc(doc(db, "users", user[0]?.id))).data();
+            te = getRequest.friends.filter((e: any) => e.id === data[0]?.id);
+        }
+
+        if (te.length > 0) {
+            setFriend(true)
+        } else {
+            setFriend(false)
+            checkRequest()
+        }
+    }
+
+    const check = async () => {
+        let te = []
+        let te2 = []
+        if (user[0]?.id !== undefined) {
+            const getRequest: any = await (await getDoc(doc(db, "users", user[0]?.id))).data();
+            te = getRequest.friends.filter((e: any) => e.id === data[0]?.id);
+            te2 = getRequest.requests.filter((e: any) => e.id === data[0]?.id);
+        }
+
+        if (te.length > 0) {
+            setFriend(true)
+        } else {
+            setFriend(false)
+            if (te2.length > 0) {
+                setRequest(true)
+            } else {
+                setRequest(false)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (data[0]?.id !== null || data[0]?.id !== undefined) {
+            if (user[0]?.id !== null || user[0]?.id !== undefined) {
+                check()
+            }
+        }
+    }, [user])
 
 
     let [friends, setFriends]: any = useState([])
@@ -159,13 +195,29 @@ function profile({ params }: any) {
         })
     }
 
+    let [open, setOpen] = useState(false);
+    useEffect(() => {
+        const aaa = async () => {
+            let t2: any = await (await getDoc((doc(db, "users", params.pro_friends)))).data();
+            setOpen(t2.Requestopen);
+        }
+        aaa();
+    }, [])
+    let [l222l, setl222l] = useState(false)
+
+
+    let l222l2: any = ""
+    useEffect(() => {
+        l222l2 = localStorage.getItem("darkmode")
+        setl222l(JSON.parse(l222l2));
+    }, [])
 
     return (
         <>
-            <div className="parent">
+            <div className="parent" style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                 <div className="profile h-[200px] flex flex-col items-center relative">
                     <div className="banner w-[90%] h-[300px] bg-blue-700 rounded-2xl overflow-hidden">
-                        <img className='object-cover h-full w-full' src="https://images.squarespace-cdn.com/content/v1/61c4da8eb1b30a201b9669f2/1696691175374-MJY4VWB1KS8NU3DE3JK1/Sounds-of-Nature.jpg" alt="" />
+                        <img className='object-cover h-full w-full' src={user[0]?.banner} alt="" />
                     </div>
                     <div className="image_user w-[70px] h-[70px] bg-red-600 rounded-full absolute bottom-[-30px] overflow-hidden">
                         <img src={`${user[0].image}`} alt="" />
@@ -174,23 +226,8 @@ function profile({ params }: any) {
 
                 <div className="header mt-9 text-[30px] text-center uppercase font-bold">
                     <h1>{user[0].username}</h1>
-                    {!request ? (
-                        <div className="follow">
-                            <a
-                                className="inline-flex items-center gap-2 rounded border border-buttons bg-buttons px-8 py-3 trnasition text-white hover:bg-transparent hover:text-buttons focus:outline-none focus:ring active:text-buttons"
-                                href="#"
-                                style={{ direction: "rtl" }}
-                                onClick={() => {
-                                    checkISFriendorno(user[0].id, data[0].id)
-                                }}
-                            >
-                                <span className="text-sm font-medium"> Add Friend</span>
-
-                                <IoPersonAdd className='size-5 rtl:rotate-180' />
-                            </a>
-                        </div>
-                    ) :
-                        (
+                    {friend ? (
+                        <>
                             <div className="follow">
                                 <a
                                     className="inline-flex items-center gap-2 rounded border border-red-500 bg-red-500 px-8 py-3 trnasition text-white hover:bg-transparent hover:text-red-500 focus:outline-none focus:ring active:text-red-500"
@@ -199,6 +236,9 @@ function profile({ params }: any) {
                                     onClick={() => {
                                         RemoveFriend(user[0].id, data[0].id)
                                         RemoveFriend2(user[0].id, data[0].id)
+                                        setTimeout(() => {
+                                            location.reload()
+                                        }, 1300)
                                     }}
                                 >
                                     <span className="text-sm font-medium"> Remove Friend</span>
@@ -206,36 +246,87 @@ function profile({ params }: any) {
                                     <IoPersonRemoveSharp className='size-5 rtl:rotate-180' />
                                 </a>
                             </div>
-                        )}
+                        </>
+                    ) :
+                        (
+                            <>
+                                {!open ? (
+                                    <>
+                                        {!request ? (
+                                            <div className="follow">
+                                                <a
+                                                    className="inline-flex items-center gap-2 rounded border border-buttons bg-buttons px-8 py-3 trnasition text-white hover:bg-transparent hover:text-buttons focus:outline-none focus:ring active:text-buttons"
+                                                    href="#"
+                                                    style={{ direction: "rtl" }}
+                                                    onClick={() => {
+                                                        checkISFriendorno()
+                                                        setTimeout(() => {
+                                                            location.reload()
+                                                        }, 1300)
+                                                    }}
+                                                >
+                                                    <span className="text-sm font-medium"> Add Friend</span>
+
+                                                    <IoPersonAdd className='size-5 rtl:rotate-180' />
+                                                </a>
+                                            </div>
+                                        ) :
+                                            (
+                                                <div className="follow">
+                                                    <a
+                                                        className="inline-flex items-center gap-2 rounded border border-buttons bg-buttons px-8 py-3 trnasition text-white hover:bg-transparent hover:text-buttons focus:outline-none focus:ring active:text-buttons"
+                                                        href="#"
+                                                        style={{ direction: "rtl" }}
+                                                        onClick={() => {
+                                                            checkISFriendorno()
+                                                        }}
+                                                    >
+                                                        <span className="text-sm font-medium">The Request is Sent</span>
+
+                                                        <IoPersonAdd className='size-5 rtl:rotate-180' />
+                                                    </a>
+                                                </div>
+                                            )}
+                                    </>
+                                ) : null}
+                            </>
+                        )
+                    }
+
+
                 </div>
-                <div className="center flex flex-row justify-evenly items-start p-11 gap-11 max-lg:flex max-lg:flex-col-reverse max-lg:px-[20px] max-lg:items-center ">
+                <div className="center flex flex-row justify-evenly items-start p-11 gap-11 max-lg:flex max-lg:flex-col-reverse max-lg:px-[20px] max-lg:items-center " style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                     <div className="sec-1 ">
                         <div className="posts max-lg:flex max-lg:items-center max-lg:flex-col ">
                             <div className="main w-[200px] ">
-                                <h1 className='text-[25px] font-bold uppercase text-center border-b-black border-b-[2px]  '>Posts</h1>
+                                <h1 className='text-[25px] font-bold uppercase text-center border-b-black border-b-[2px]  ' style={l222l ? { borderBottom: "1px solid white", color: "white" } : {}}>Posts</h1>
                             </div>
-                            {datapost.map((e: any) => (
+                            {datapost.map((a: any) => (
                                 <Post
-                                    key={e.id}
+                                    key={a.id}
+                                    source={data[0].id}
+                                    username={data[0].username}
+                                    imageofuser={data[0].image}
+                                    imageofpublisher={a.imageofpublisher}
+                                    nameofpublish={a.nameofpublish}
+                                    idofpublisher={a.idofpublisher}
+                                    postname={a.postname}
+                                    imagepost={a.imagepost}
+                                    commentCount={a.commentsCount}
+                                    comments={a.comments}
+                                    likes={a.likes}
+                                    element={a}
+                                    id={a.id}
+                                    createdAt={a.createdAt}
+                                    l222l={l222l}
 
-                                    username={user[0].username}
-                                    imageofuser={user[0].image}
-                                    imageofpublisher={e.imageofpublisher}
-                                    nameofpublish={e.nameofpublish}
-                                    postname={e.postname}
-                                    imagepost={e.image}
-                                    commentCount={e.commentsCount}
-                                    comments={e.comments}
-                                    likes={e.likes}
-                                    element={e}
-                                    id={e.id}
                                 />
                             ))}
                         </div>
                     </div>
                     <div className="sec-2">
                         <div className="information flex justify-center my-7 flex-col">
-                            <div className="about_me w-[500px] p-[15px] rounded-2xl bg-slate-50 text-center  max-lg:w-fit ">
+                            <div className="about_me w-[500px] p-[15px] rounded-2xl bg-slate-50 text-center  max-lg:w-fit " style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                                 <div className="main flex justify-center  px-7 items-center">
                                     <h1 className='font-bold text-[20px] uppercase p-[10px]'>About Of {user[0].username}</h1>
                                 </div>
@@ -245,12 +336,12 @@ function profile({ params }: any) {
 
 
                             </div>
-                            <div className="friends flex flex-col items-center gap-5 w-[500px] my-8 bg-slate-50 rounded-2xl p-4 max-lg:w-fit ">
+                            <div className="friends flex flex-col items-center gap-5 w-[500px] my-8 bg-slate-50 rounded-2xl p-4 max-lg:w-fit " style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                                 <h1 className='font-bold text-[20px] uppercase p-[10px]'>Friends</h1>
                                 {friends.length > 0 ? (
                                     <div className="list flex flex-wrap justify-center  gap-5">
                                         {friends.map((e: any) => (
-                                            <div key={e.id} className="friend w-[200px] bg-white flex flex-col items-center p-5 rounded-xl">
+                                            <div key={e.id} className="friend w-[200px] bg-white flex flex-col items-center p-5 rounded-xl" style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                                                 <div className="image w-[70px] h-[70px] bg-red-600 rounded-full   overflow-hidden">
                                                     <img src={e.image} alt="" />
                                                 </div>

@@ -1,21 +1,23 @@
 "use client"
 
 import { db } from '@/app/_config/firebase';
-import { Data2 } from '@/app/_context/Context';
-import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { Data } from '@/app/_context/Context';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react'
-import { FaImages, FaRegCommentDots } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import { BsFillSendFill } from "react-icons/bs";
+import Massege from './massege';
 
-function Chat(props: { name: string, image: string, id: string }) {
+
+function Chat(props: { name: string, image: string, id: string, mass: string[] }) {
 
     let [mass, setmass]: any = useState([]);
-
+    let user: any = useContext(Data);
 
     let arr = []
 
     useEffect(() => {
+
+        setmass([]);
         const getData = async () => {
             let t: any = await (await getDoc((doc(db, "chats", `${props.id}`)))).data();
             if (t?.chatmassege?.length > 0 && t.chatmassege !== undefined) {
@@ -40,19 +42,9 @@ function Chat(props: { name: string, image: string, id: string }) {
             }
         }
 
-        // const getData2: any = onSnapshot(doc(db, "chats", `${props.id}`), (doc: any) => {
 
-        //     if (doc?.chatmassege?.length > 0 && doc.chatmassege !== undefined) {
-        //         arr.push(...doc.chatmassege)
-        //         setmass([...mass, ...arr])
-        //         console.log(mass)
-        //     } else {
-        //         setmass([...mass])
-        //     }
-        // })
-        // getData2()
         upload()
-    }, [mass])
+    }, mass)
 
     console.log(props)
 
@@ -75,19 +67,21 @@ function Chat(props: { name: string, image: string, id: string }) {
                     <div className="masseges overflow-y-scroll block h-[500px]">
                         <div className="window  flex flex-col gap-5 justify-end p-[20px] ">
                             {mass.map((e: any) => (
-                                <div className={`massege_me w-full ${e.isyou ? "flex justify-end" : null}`} key={e.name}>
-                                    <div className="me w-fit bg-white p-15px rounded-[20px]  p-[15px] flex justify-between items-center" style={{ borderTopLeftRadius: "0px" }}>
-                                        <div className="text">
-                                            <span className='text-[13px] text-slate-400'> {e.name}</span>
-                                            <p className='w-[300px] break-all'>{e.value}</p>
-                                        </div>
-                                        <div className="setting_massege cursor-pointer text-red-500 transition hover:text-red-800 mr-4">
-                                            <MdDelete onClick={() => {
-                                                setmass(mass.filter((ea) => ea.value !== e.value))
-                                                console.log(mass)
-                                            }} />
-                                        </div>
-                                    </div>
+                                <div className="massege w-fit relative">
+                                    <Massege
+                                        key={e.name}
+                                        name={e.name}
+                                        value={e.value}
+                                        id={props.id}
+                                        mass={mass}
+
+                                    />
+                                    {e.name === user[0]?.username ? (
+                                        <div className="test w-[67px] h-1/2 right-0 top-1/2 cursor-pointer translate-y-[-50%] absolute" onClick={() => {
+                                            setmass(mass.filter((ea: { value: string }) => ea.value !== e.value))
+                                            console.log(mass)
+                                        }}></div>
+                                    ) : null}
                                 </div>
                             ))}
                         </div>
@@ -96,7 +90,7 @@ function Chat(props: { name: string, image: string, id: string }) {
                         e.preventDefault()
                         mass.push({
                             value: e.target[0].value,
-                            name: props.name,
+                            name: user[0]?.username,
                         })
                         setmass([...mass])
                         e.target[0].value = ""

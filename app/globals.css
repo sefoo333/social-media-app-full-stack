@@ -46,4 +46,11 @@ body {
     justify-content: center;
     padding: 11px;
   }
+
+
+}
+
+
+.mix:hover .upload_icon {
+  opacity: 1;
 }

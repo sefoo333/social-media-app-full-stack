@@ -1,6 +1,6 @@
 "use client"
 
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,15 +11,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/app/_config/firebase";
+import toast, { ToastBar, Toaster, ToastIcon } from "react-hot-toast";
 export default function Home() {
   let [seepassword, setPassword] = useState(true)
   let [Email, setEmail] = useState(false)
   let [signup, setchange] = useState(true)
   useEffect(() => {
     console.log(Email)
-
-
-
   }, [Email])
 
   let arr: any = []
@@ -30,7 +28,7 @@ export default function Home() {
         setTimeout(() => {
           window.open("/home", "_parent")
 
-        }, 1000)
+        }, 2500)
       } else {
         console.log('test')
       }
@@ -49,42 +47,54 @@ export default function Home() {
       console.log("this doc => ", docy)
       const testy = async () => {
         console.log(doc)
-        let t: any = await (await getDoc((doc(db, "users", docy.user.uid)))).data();
-        if (t !== null) {
-          await updateDoc(doc(db, "users", t.id), {
-            friends: t.friends,
-            requests: t.requests,
+        let t: any = await (await getDoc((doc(db, "users", docy?.user?.uid)))).data();
+        console.log(t)
 
-          });
+        let tt1 = t?.friends !== undefined || t?.friends !== null ? t?.friends : [];
+        let tt2 = t?.requests !== undefined || t?.requests !== null ? t?.requests : [];
 
-          if (history.length > 0) {
-            history.back();
-          }
-        } else {
+        if (t === undefined || t === null) {
           await setDoc(doc(db, "users", docy.user.uid), {
             username: docy.user.displayName,
             id: docy.user.uid,
             image: docy.user.photoURL,
             banner: "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=",
-            posts: [],
             friends: [],
             requests: [],
-            isonline: false,
             aboutOfMe: "",
             thessc: "User",
-
-          });
-
-        }
-        let t2: any = await (await getDoc((doc(db, "userschat", docy.user.uid)))).data();
-        if (t2 !== null) {
-          await updateDoc(doc(db, "userschat", t.id), {
-            chat: t2.chat,
+            Requestopen: true,
 
           });
         } else {
+          await updateDoc(doc(db, "users", `${docy.user.uid}`), {
+            friends: t.friends,
+            requests: t.requests,
+          });
+
+          if (history.length > 0) {
+            history.back();
+          }
+        }
+        let t2: any = await (await getDoc((doc(db, "userschat", docy.user.uid)))).data();
+        console.log(t2 !== null, t2 !== undefined)
+        if (t2 === undefined || t2 === null) {
           await setDoc(doc(db, "userschat", docy.user.uid), {
             chat: [],
+          });
+        } else {
+          await setDoc(doc(db, "userschat", docy.user.uid), {
+            chat: t2?.chat,
+          });
+        }
+        let t3: any = await (await getDoc((doc(db, "likeslog", docy.user.uid)))).data();
+        if (t3 === undefined || t3 === null) {
+          await setDoc(doc(db, "likeslog", docy.user.uid), {
+            likes: [],
+          });
+        } else {
+          await setDoc(doc(db, "likeslog", docy.user.uid), {
+            likes: t3?.likes,
           });
         }
       }
@@ -92,7 +102,6 @@ export default function Home() {
     }).catch((error) => {
       console.log("Error", error)
     })
-
   }
 
 
@@ -103,7 +112,6 @@ export default function Home() {
 
   const signupbyEmail = async () => {
     createUserWithEmailAndPassword(auth, email2, password2).then((docy) => {
-
       const testy = async () => {
         await setDoc(doc(db, "users", docy.user.uid), {
           username: name,
@@ -116,6 +124,7 @@ export default function Home() {
           isonline: false,
           aboutOfMe: "",
           thessc: "User",
+          Requestopen: true,
 
         });
 
@@ -123,13 +132,18 @@ export default function Home() {
           chat: [],
         });
 
+        await setDoc(doc(db, "likeslog", docy.user.uid), {
+          likes: [],
+        });
       }
       testy();
     }).catch((e) => {
       console.log("error", e);
     })
+
   }
 
+  const action = () => toast("The Email or Password is unCorrect ❌")
 
   const signinbyEmail = async () => {
 
@@ -153,10 +167,22 @@ export default function Home() {
             chat: t2.chat,
 
           });
+          let t3: any = await (await getDoc((doc(db, "likeslog", docy.user.uid)))).data();
+
+          await setDoc(doc(db, "likeslog", docy.user.uid), {
+            likes: t3?.likes,
+          });
+
         }
 
+
+        setTimeout(() => {
+          location.reload()
+        }, 2000)
         testy();
 
+      }).catch((e) => {
+        action()
       })
     } catch (error) {
       console.log("error", error)
@@ -273,6 +299,7 @@ export default function Home() {
                 className="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
                 onClick={() => {
                   signupbyEmail()
+
                 }}
               >
                 Sign up
@@ -317,9 +344,9 @@ export default function Home() {
               }} />
             </div>
           </form>
-
         </div>
       </div>
+      <Toaster />
     </>
   );
 }

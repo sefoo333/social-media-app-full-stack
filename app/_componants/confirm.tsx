@@ -10,8 +10,8 @@ function Confirm(props: any) {
     }
 
     return (
-        <div className="par w-full h-full fixed left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] z-50 bg-[#0000007d]">
-            <div className="rounded-lg bg-white p-8 shadow-2xl fixed left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] z-50">
+        <div className="par w-full h-full fixed left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] z-50 bg-[#0000007d] rounded-md">
+            <div className="rounded-lg bg-white p-8 shadow-2xl fixed left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] z-50" style={props.l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                 <h2 className="text-lg font-bold">Are you sure to delete Post ?</h2>
 
                 <p className="mt-2 text-sm text-gray-500">
@@ -19,11 +19,11 @@ function Confirm(props: any) {
                 </p>
 
                 <div className="mt-4 flex gap-2">
-                    <button type="button" className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-buttons" onClick={() => deletePost()}>
+                    <button type="button" className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-buttons" onClick={() => deletePost()} style={props.l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                         Yes, I'm sure
                     </button>
 
-                    <button type="button" className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onClick={() => location.reload()}>
+                    <button type="button" className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onClick={() => location.reload()} style={props.l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                         No, go back
                     </button>
                 </div>

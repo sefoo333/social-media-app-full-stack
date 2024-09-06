@@ -31,10 +31,10 @@ export default function DATRA({ children }: any) {
         setUser3(...user33336, ...arr3);
     }
     useEffect(() => {
-        const isloged = () => onAuthStateChanged(auth, (user) => {
-            if (user) {
+        const testttttt = onAuthStateChanged(auth, (user3) => {
+            if (user3) {
                 setData(true)
-                tes(user.uid);
+                tes(user3.uid);
             } else {
                 setData(false)
             }
@@ -42,7 +42,7 @@ export default function DATRA({ children }: any) {
             console.log("error", error)
         })
         return () => {
-            isloged()
+            testttttt()
         }
     }, [])
     return (

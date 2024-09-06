@@ -6,18 +6,21 @@ import { BsChatDots } from "react-icons/bs";
 import { IoHomeOutline, IoPersonAddOutline } from "react-icons/io5";
 import Link from 'next/link';
 import CreatePost from '../_componants/createPost';
-import { signOut } from 'firebase/auth';
+import { sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { auth, db, } from '../_config/firebase';
 
 import { onAuthStateChanged } from 'firebase/auth';
 import Greeter from '../_componants/greeter';
 
 
-import { collection, doc, deleteDoc, updateDoc, getDocs, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, deleteDoc, updateDoc, getDocs, getDoc, setDoc, limit, query, orderBy } from 'firebase/firestore';
 import { Data, Data2, Data3 } from '../_context/Context';
 import Post from '../_componants/post';
 import { ref } from 'firebase/storage';
 import Loading from '../_componants/loading';
+import FriendsFF2 from '../_componants/friends/friendforhome';
+import toast from 'react-hot-toast';
+import { MdOutlineQrCode2 } from 'react-icons/md';
 
 function page() {
     let user: any = useContext(Data);
@@ -32,21 +35,44 @@ function page() {
     user3.push(object, user[1])
 
     let arr: any = []
+    let [l222l, setl222l] = useState(false)
+
+
+    let l222l2: any = ""
+    useEffect(() => {
+        l222l2 = localStorage.getItem("darkmode")
+        setl222l(JSON.parse(l222l2));
+    }, [])
+
+    const testyyyy = async () => {
+        const citiesRef = collection(db, "posts");
+        const q = query(citiesRef, limit(3));
+        const q2 = await getDocs(q)
+        console.log(q2)
+        q2.forEach((doc) => {
+            arr.push(doc.data());
+            setPosts(arr)
+        })
+    };
+
+    const showmore = async () => {
+        const citiesRef = collection(db, "posts");
+        const q = query(citiesRef, limit(datapost.length + 3));
+        const q2 = await getDocs(q)
+        console.log(q2)
+        q2.forEach((doc) => {
+            arr.push(doc.data());
+            setPosts(arr)
+        })
+    }
 
     useEffect(() => {
-
-        const testyyyy = async () => {
-            let querySnapshot = await getDocs(collection(db, "posts"))
-            querySnapshot.forEach((doc) => {
-                arr.push(doc.data());
-                setPosts(arr)
-            })
-        };
 
         const test2 = onAuthStateChanged(auth, (user2) => {
             if (user2) {
                 console.log('loged')
                 setdata(true)
+                testyyyy();
             } else {
                 window.open("/", "_parent")
                 setdata(false)
@@ -56,9 +82,8 @@ function page() {
 
         return () => {
             test2()
-            testyyyy()
         }
-    }, [])
+    }, user)
     let arrr3: any = []
     const comment = async (id: string, post: { comments: any[], commentsCount: number }, value: string) => {
         if (value !== "") {
@@ -125,21 +150,40 @@ function page() {
     }
 
 
+    let arr2 = []
+    let idfortwo = Date.now();
 
-    const addToChat = async (you: string, theuser: { name: string; image: string; id: string; }) => {
-        let t: any = await (await getDoc((doc(db, "userschat", `${you}`)))).data();
+    const addToChat = async (you: any, theuser: { name: string; image: string; id: string; }) => {
+        let t: any = await (await getDoc((doc(db, "userschat", `${you.id}`)))).data();
         arr.push(...t.chat, {
-            chatid: `chat-${Date.now()}`,
+            chatid: `chat-${idfortwo}`,
             lastmassege: "",
             name: theuser.name,
             image: theuser.image,
             id: theuser.id
         })
 
-        await updateDoc(doc(db, "userschat", `${you}`), {
+        await updateDoc(doc(db, "userschat", `${you.id}`), {
             chat: arr,
         })
+
     }
+
+    const addToChat2 = async (you: any, theuser: { name: string; image: string; id: string; }) => {
+        let t2: any = await (await getDoc((doc(db, "userschat", `${theuser.id}`)))).data();
+        arr2.push(...t2.chat, {
+            chatid: `chat-${idfortwo}`,
+            lastmassege: "",
+            name: you.username,
+            image: you.image,
+            id: you.id
+        })
+
+        await updateDoc(doc(db, "userschat", `${theuser.id}`), {
+            chat: arr2,
+        })
+    }
+
 
 
     const addchatid = async (id: string, id2: string) => {
@@ -150,6 +194,7 @@ function page() {
             createdAt: new Date(),
         })
     }
+
 
     const cancel = async (id: string, id2: string) => {
         let t: any = await (await getDoc((doc(db, "users", `${id}`)))).data();
@@ -164,22 +209,23 @@ function page() {
         <>
             {data ? (
 
-                <div className="window flex justify-between max-sm:justify-center max-sm:items-center">
-                    <div className="side_main max-sm:hidden  ">
-                        <div className="flex h-screen w-16 flex-col justify-between border-e bg-white fixed">
+                <div className="window flex justify-between max-sm:justify-center max-sm:items-center" style={l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
+                    <div className="side_main max-sm:hidden" style={l222l ? { backgroundColor: "#242526", border: "1px solid #242526", color: "white" } : {}}                    >
+                        <div className="flex h-screen w-16 flex-col justify-between border-e bg-white fixed" style={l222l ? { backgroundColor: "#242526", border: "1px solid #242526", color: "white" } : {}} >
                             <div>
-                                <div className="inline-flex size-16 items-center justify-center">
-                                    <span className="grid size-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
-                                        User
+                                <div className="inline-flex size-16 items-center justify-center" >
+                                    <span className="grid size-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600" style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
+                                        <img src={user[0]?.image} className='rounded-xl' alt="" />
                                     </span>
                                 </div>
 
-                                <div className="border-t border-gray-100">
+                                <div className="border-t border-gray-100" style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                                     <div className="px-2">
-                                        <div className="py-4">
+                                        <div className="py-4" >
                                             <Link
                                                 href="/home"
                                                 className="t group relative flex justify-center rounded bg-blue-50 px-2 py-1.5 text-blue-700"
+                                                style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}
                                             >
                                                 <IoHomeOutline />
 
@@ -283,7 +329,7 @@ function page() {
                                 </div>
                             </div>
 
-                            <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-white p-2">
+                            <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-white p-2" style={l222l ? { backgroundColor: "#242526", border: "1px solid #242526", color: "white" } : {}}                            >
                                 <form action="#">
                                     <button
                                         onClick={() => {
@@ -319,42 +365,57 @@ function page() {
                         </div>
                     </div>
                     <div className="center  mt-[50px] max-sm:w-[330px] max-sm:flex max-sm:items-center max-sm:flex-col ">
-                        <CreatePost />
+                        <CreatePost l222l={l222l} />
 
                         <div className="posts  mt-6  p-7 rounded-3xl max-sm:w-full">
 
 
 
-                            {datapost.length > 0 ?
-                                datapost.map((a: any) => (
-                                    <Post
-                                        key={a.id}
+                            {user.map((e: any) => (
+                                <>
+                                    {
+                                        datapost.map((a: any) => (
+                                            <Link href={`/post/${a.id}`}>
+                                                <Post
+                                                    key={a.id}
 
-                                        username={user3[0].username}
-                                        imageofuser={user3[0].image}
-                                        imageofpublisher={a.imageofpublisher}
-                                        nameofpublish={a.nameofpublish}
-                                        idofpublisher={a.idofpublisher}
-                                        postname={a.postname}
-                                        imagepost={a.imagepost}
-                                        commentCount={a.commentsCount}
-                                        comments={a.comments}
-                                        likes={a.likes}
-                                        element={a}
-                                        id={a.id}
+                                                    username={user3[0].username}
+                                                    imageofuser={user3[0].image}
+                                                    imageofpublisher={a.imageofpublisher}
+                                                    nameofpublish={a.nameofpublish}
+                                                    idofpublisher={a.idofpublisher}
+                                                    postname={a.postname}
+                                                    imagepost={a.imagepost}
+                                                    commentCount={a.commentsCount}
+                                                    comments={a.comments}
+                                                    likes={a.likes}
+                                                    element={a}
+                                                    id={a.id}
+                                                    l222l={l222l}
+                                                    createdAt={a.createdAt}
+                                                    source={user3[0].id}
+                                                />
+                                            </Link>
+                                        ))
+                                    }
+                                </>
+                            ))}
 
-                                        source={user3[0].id}
-                                    />
-                                ))
 
-                                :
-                                null}
+                            <div className="showmore text-center mt-[15px]">
+                                <span onClick={() => { showmore() }}
+                                    className="pb-[5px] border-b-white border-b-[1px]"
+                                >Show more...</span>
+                            </div>
+
+
+
 
 
                         </div>
                     </div>
 
-                    <div className="side_friends flex right-0 flex-col h-screen bg-slate-50 p-4 max-sm:hidden ">
+                    <div className="side_friends flex right-0 flex-col h-screen bg-slate-50 p-4 max-sm:hidden " style={l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                         <div className="friends_list">
                             <div className="main">
                                 <h1 className='text-[25px] font-bold uppercase'>Friends</h1>
@@ -362,15 +423,12 @@ function page() {
                             <div className="list">
                                 {friends.map((e: any, index: number) => (
                                     <Link href={`/${e.id}`}>
-                                        <div key={index} className="element flex p-[10px] items-center w-[250px]">
-                                            <div className="image w-[40px] h-[40px] rounded-full mr-[10px] bg-slate-600 overflow-hidden" >
-                                                <img src={e.image} alt="" />
-                                            </div>
-                                            <div className="main_text text-nowrap">
-                                                <h1>{e.namefriend}</h1>
-                                                <span className="text-[#ccc] text-[13px]">Friend</span>
-                                            </div>
-                                        </div>
+                                        <FriendsFF2
+                                            namefriend={e.name}
+                                            id={e.id}
+                                            image={e.image}
+                                            l222l={l222l}
+                                        />
                                     </Link>
                                 ))}
                             </div>
@@ -397,16 +455,22 @@ function page() {
                                                 console.log(user[0])
                                                 addFriend(user3[0].id, i, i.id, i.idfriendsend)
                                                 addfromother(i.id, i.idfriendsend)
-                                                addToChat(user[0].id, i)
+                                                addToChat(user[0], i)
+                                                addToChat2(user[0], i)
+
                                                 setTimeout(() => {
                                                     addchatid(user[0].id, i.id)
+
                                                 }, 850)
                                                 setTimeout(() => {
                                                     location.reload()
                                                 }, 1300)
                                             }}>Accept</button>
-                                            <button className='py-[7px] px-[10px] bg-slate-50 border-[1px] border-buttons ml-[10px] mt-[10px] rounded-[10px] uppercase  text-[12px] transition hover:bg-buttons hover:text-white ' onClick={() => {
+                                            <button className='py-[7px] px-[10px] bg-slate-50 border-[1px] border-buttons ml-[10px] mt-[10px] rounded-[10px] uppercase  text-[12px] transition hover:bg-buttons hover:text-white ' style={l222l ? { backgroundColor: "#242526", color: "white" } : {}} onClick={() => {
                                                 cancel(user[0].id, i.id)
+                                                setTimeout(() => {
+                                                    location.reload()
+                                                }, 1300)
                                             }}>Decline</button>
                                         </div>
                                     </div>

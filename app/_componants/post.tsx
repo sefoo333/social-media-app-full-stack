@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { IoSend } from "react-icons/io5";
+import { IoClose, IoSend } from "react-icons/io5";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaImages, FaRegCommentDots } from "react-icons/fa";
 import { BsChatDots } from "react-icons/bs";
 import { IoHomeOutline, IoPersonAddOutline } from "react-icons/io5";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { FcLike } from "react-icons/fc";
-import { deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../_config/firebase';
 import { Data } from '../_context/Context';
 import Confirm from './confirm';
 import Link from 'next/link';
+import Comment from './comment';
+import Share from './share';
 
 function Post(props: any) {
 
@@ -47,7 +49,8 @@ function Post(props: any) {
             arrr3.push(...post.comments, {
                 name: props.username,
                 image: props.imageofuser,
-                comment: value
+                comment: value,
+                id: datauser[0]?.id
             })
             await updateDoc(doc(db, "posts", `${id}`), {
                 comments: arrr3,
@@ -56,6 +59,7 @@ function Post(props: any) {
         }
     }
     let object444 = {}
+    let [ttr, setIttr] = useState<string | null>(null)
     const like = async (id: string, post: any) => {
 
         Object.assign(object444, {
@@ -63,7 +67,12 @@ function Post(props: any) {
             isliked: true
         })
 
-        localStorage.setItem("likes", JSON.stringify([...JSON.parse(localStorage.getItem("likes")), object444]))
+        let l: any = localStorage.getItem("likes")
+        localStorage.setItem("likes", JSON.stringify([...JSON.parse(l), object444]))
+        await updateDoc(doc(db, "likeslog", datauser[0]?.id), {
+            likes: [...JSON.parse(l), object444],
+        })
+
 
         await updateDoc(doc(db, "posts", `${id}`), {
             likes: likes + 1,
@@ -76,7 +85,11 @@ function Post(props: any) {
             postid: id,
             isliked: false
         })
-        localStorage.setItem("likes", JSON.stringify([...JSON.parse(localStorage.getItem("likes")), object444]));
+        let l: any = localStorage.getItem("likes")
+        localStorage.setItem("likes", JSON.stringify([...JSON.parse(l), object444]));
+        await updateDoc(doc(db, "likeslog", datauser[0]?.id), {
+            likes: [...JSON.parse(l), object444],
+        })
 
         await updateDoc(doc(db, "posts", `${id}`), {
             likes: likes - 1,
@@ -100,41 +113,83 @@ function Post(props: any) {
 
     }, [])
 
-    useEffect(() => {
-        let filter = JSON.parse(localStorage.getItem("likes")).filter((e: { postid: number, id: number }) => {
-            return e.postid === props.id
-        })
+    let ttr2: any = [];
 
-        if (filter.length > 0) {
-            setLiked(filter[filter.length - 1].isliked)
+    useEffect(() => {
+        const getlog = async () => {
+            if (datauser[0] !== null || datauser[0] !== undefined) {
+
+                let t1 = await (await getDoc((doc(db, "likeslog", datauser[0]?.id)))).data();
+
+                if (t1?.likes?.length > 0) {
+                    let filter = t1?.likes?.filter((e: { postid: number, id: number }) => {
+                        return e.postid === props.id
+                    })
+
+                    if (t1?.likes !== null || t1?.likes !== undefined) {
+                        if (filter.length > 0) {
+                            setLiked(filter[filter.length - 1].isliked)
+                        }
+                    }
+
+                    localStorage.setItem("likes", JSON.stringify(t1?.likes));
+                } else {
+                    console.log(ttr)
+                }
+            }
         }
-    }, [])
+
+        return () => {
+            getlog();
+        }
+    }, [datauser[0]])
 
     let [conf, setConfirm] = useState(false);
 
 
+    let [Name, setName] = useState("");
+    let [Image, setImage] = useState("");
+
+    useEffect(() => {
+        const test = async () => {
+            let t: any = await (await getDoc((doc(db, "posts", `${props.id}`)))).data();
+            let t2: any = await (await getDoc((doc(db, "users", `${t?.idofpublisher}`)))).data();
+            if (t2 !== undefined) {
+                setName(t2.username)
+                setImage(t2.image)
+            } else {
+                setName(props.name)
+                setImage(props.image)
+            }
+        }
+
+        test();
+    }, [datauser])
+
+
+    let [oopen, setopen2] = useState(false);
 
     return (
         <>
 
             {conf ? (
-                <Confirm id={props.id} />
+                <Confirm id={props.id} l222l={props.l222l} />
 
             )
                 :
                 null
             }
 
-            <div className="post mt-[30px] bg-slate-50 p-[20px] rounded-lg w-[500px] max-sm:w-full">
+            <div className="post mt-[30px] bg-slate-50 p-[20px] rounded-lg w-[500px] max-sm:w-full" onClick={() => console.log(props.id)} style={props.l222l ? { backgroundColor: "#242526", color: "white" } : {}}>
                 <div className="text">
                     <div className="profile flex items-center justify-between">
                         <div className="left flex">
                             <div className="image_profile w-[40px] h-[40px] bg-red-600 rounded-full overflow-hidden">
-                                <img src={props.imageofpublisher} alt="" />
+                                <img src={Image} alt="" />
                             </div>
                             <div className="user ml-4">
-                                <h1>{props.nameofpublish}</h1>
-                                <span>User</span>
+                                <h1>{Name}</h1>
+                                <span>{props.createdAt}</span>
                             </div>
                         </div>
                         <div className="right cursor-pointer">
@@ -145,7 +200,11 @@ function Post(props: any) {
                                 }} />
                                 <div className="window absolute left-[-180px] top-[42px] w-[200px] bg-slate-100 text-black duration-500 transition z-40" style={open ? { display: "block" } : { display: "none" }}>
                                     {isdelete ? <div className="sec-1 px-[8px] py-[12px] border-b-[1px] border-b-[#ddd] cursor-pointer duration-300 hover:bg-buttons  hover:text-white " onClick={() => setConfirm(true)}>Delete</div> : null}
-                                    <Link href={`/${props.idofpublisher}`}> <div className="sec-2 px-[8px] py-[12px] border-b-[1px] border-b-[#ddd] cursor-pointer duration-300 hover:bg-buttons  hover:text-white">Profile {props.nameofpublish}</div>                                    </Link>
+                                    {datauser[0]?.id !== props.idofpublisher ? (
+                                        <Link href={`/${props.idofpublisher}`}> <div className="sec-2 px-[8px] py-[12px] border-b-[1px] border-b-[#ddd] cursor-pointer duration-300 hover:bg-buttons  hover:text-white">Profile {props.nameofpublish}</div></Link>
+
+                                    ) : null}
+                                    <div className="sec-2 px-[8px] py-[12px] border-b-[1px] border-b-[#ddd] cursor-pointer duration-300 hover:bg-buttons  hover:text-white" onClick={() => setopen2(true)}>Share</div>
                                 </div>
                             </div>
                         </div>
@@ -180,6 +239,7 @@ function Post(props: any) {
                             <div className="like flex items-center text-[20px] text-[#959595] cursor-pointer" onClick={() => {
                                 setLiked(false)
                                 unlike(props.id, props.element)
+                                console.log(liked)
                             }}>
                                 <FcLike className='mr-[10px]' />
                                 <span>Liked</span>
@@ -189,6 +249,7 @@ function Post(props: any) {
                         (
                             <div className="like flex items-center text-[20px] text-[#959595] cursor-pointer" onClick={() => {
                                 setLiked(true)
+                                console.log(liked)
                                 like(props.id, props.element)
                             }}>
                                 <MdFavoriteBorder className='mr-[10px]' />
@@ -208,20 +269,20 @@ function Post(props: any) {
                 {openComment ? (
                     <div className="comments">
                         <div className="user_comment">
-                            <div className="post_create flex items-center rounded-[15px] p-[20px] justify-center bg-slate-50 ">
+                            <div className="post_create flex items-center rounded-[15px] p-[20px] justify-center bg-slate-50 " style={props.l222l ? { backgroundColor: "#18191a", color: "white" } : {}}>
                                 <form action="" onSubmit={(e: any) => {
                                     e.preventDefault();
-                                    comment(props.id, props.element, e.target[0].value)
+                                    comment(props.element.id, props.element, e.target[0].value)
                                     e.target[0].value = ""
-                                    // setTimeout(() => {
-                                    //     location.reload()
-                                    // }, 3000)
+                                    setTimeout(() => {
+                                        location.reload()
+                                    }, 1500)
                                 }}>
                                     <div className="top flex items-center">
                                         <div className="image w-[40px] mr-3 h-[40px] bg-red-600 rounded-full overflow-hidden">
                                             <img src={props.imageofuser} alt="" />
                                         </div>
-                                        <input type="text" className="p-[8px] rounded-xl border-none outline-none w-[350px] max-lg:w-fit " placeholder='type any words' />
+                                        <input type="text" style={props.l222l ? { backgroundColor: "#242526", color: "white" } : {}} className="p-[8px] rounded-xl border-none outline-none w-[350px] max-lg:w-fit " placeholder='type any words' />
                                     </div>
                                     <div className="under flex justify-end items-center mt-3 overflow-hidden">
                                         <input type="submit" className='py-[7px] px-[15px] bg-buttons text-white mr-3 rounded-xl transition cursor-pointer  hover:bg-[#2697a0]' value="Comment" />
@@ -235,20 +296,14 @@ function Post(props: any) {
                             <h1 className='text-[25px] font-bold uppercase'>Comments</h1>
                         </div>
                         {props.comments.map((z: any) => (
-                            <div className="comment p-[15px] text-justify bg-slate-400 rounded-[26px] my-[15px]" style={{ borderTopLeftRadius: "0" }}>
-                                <div className="profile flex items-center mb-4">
-                                    <div className="image_profile w-[30px] h-[30px] bg-red-600 rounded-full overflow-hidden">
-                                        <img src={z.image} alt="" />
-                                    </div>
-                                    <div className="user ml-4">
-                                        <h1>{z.name}</h1>
-                                        <span>User</span>
-                                    </div>
-                                </div>
-                                <div className="content">
-                                    <p>{z.comment}</p>
-                                </div>
-                            </div>
+                            <Comment
+                                image={z.image}
+                                name={z.name}
+                                comment={z.comment}
+                                id={z.id}
+                                postid={props.id}
+                                l222l={props.l222l}
+                            />
                         ))}
 
 
@@ -256,6 +311,14 @@ function Post(props: any) {
                 ) :
                     null}
             </div>
+            {oopen ? (
+                <div className="par w-full h-full fixed left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] z-50 bg-[#0000007d] rounded-md">
+                    <div className="t relative w-[300px] h-[300px] left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+                        <IoClose onClick={() => oopen ? setopen2(false) : setopen2(true)} className='cursor-pointer text-white text-[30px] right-[-5px] top-[40px] translate-x-[-50%] translate-y-[-50%] absolute z-[9999]' />
+                        <Share id={props.id} />
+                    </div>
+                </div>
+            ) : null}
         </>
     )
 }
