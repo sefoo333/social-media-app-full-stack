@@ -207,8 +207,10 @@ function Post(props: any) {
                         </div>
                     </div>
 
-                    <div className="content p-[10px] leading-[2]">
+                  <div className="content p-[10px] leading-[2]">
+                        <Link href={`/post/${props.id}`}>
                         <p>{props.postname}</p>
+                        </Link>
                     </div>
 
                 </div>
