@@ -36,7 +36,7 @@ function page({ params }: any) {
         return () => {
             getData();
         }
-    }, [])
+    }, [params.postid])
 
     let [l222l, setl222l] = useState(false)
 
