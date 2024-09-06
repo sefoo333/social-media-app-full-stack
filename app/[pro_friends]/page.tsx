@@ -56,7 +56,6 @@ function profile({ params }: any) {
 
     let arr: any = []
 
-    useEffect(() => {
         const getData2 = async () => {
             const q = query(collection(db, "posts"), where("idofpublisher", "==", params.pro_friends));
             const getty = await getDocs(q)
@@ -65,6 +64,7 @@ function profile({ params }: any) {
                 setPosts([...datapost, ...arr]);
             })
         }
+    useEffect(() => {
 
 
         return () => {
