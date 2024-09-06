@@ -26,7 +26,7 @@ function page({ params }: any) {
             test()
         }
     }, [])
-    const [object, setObject]: any = useState(null)
+    const [objectt, setObject]: any = useState(null)
     const user3: any = useContext(Data)
     const getData = async () => {
         let post = await (await getDoc((doc(db, "posts", `${params.postid}`)))).data();
@@ -35,6 +35,7 @@ function page({ params }: any) {
 
     useEffect(() => {
     console.log("this is" , params.postid)
+    console.log("this is" , objectt)
       if (object !== null){
             return () => {
             getData();
@@ -59,18 +60,18 @@ function page({ params }: any) {
 
                 username={user3[0]?.username}
                 imageofuser={user3[0]?.image}
-                imageofpublisher={object.imageofpublisher}
-                nameofpublish={object.nameofpublish}
-                idofpublisher={object.idofpublisher}
-                postname={object.postname}
-                imagepost={object.imagepost}
-                commentCount={object.commentsCount}
-                comments={object.comments}
-                likes={object.likes}
-                element={object}
-                id={object.id}
+                imageofpublisher={objectt.imageofpublisher}
+                nameofpublish={objectt.nameofpublish}
+                idofpublisher={objectt.idofpublisher}
+                postname={objectt.postname}
+                imagepost={objectt.imagepost}
+                commentCount={objectt.commentsCount}
+                comments={objectt.comments}
+                likes={objectt.likes}
+                element={objectt}
+                id={objectt.id}
                 l222l={l222l}
-                createdAt={object.createdAt}
+                createdAt={objectt.createdAt}
                 source={user3[0]?.id}
             />
 
