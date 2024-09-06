@@ -6,7 +6,6 @@ import { BsFillSendFill } from "react-icons/bs";
 import { Data, Data2 } from '../_context/Context';
 import { auth, db } from '../_config/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import Chat from '../_componants/chat';
 import PPaa from './[chatid]/page';
 import { FaAlignJustify } from "react-icons/fa6";
 import { onAuthStateChanged } from 'firebase/auth';
