@@ -141,9 +141,7 @@ function friends() {
                         {userdata.map((e: any) => (
                             <Link href={`/${e.id}`}>
                                 <FriendsFF
-                                    namefriend={e.name}
                                     id={e.id}
-                                    image={e.image}
                                     l222l={l222l}
                                 />
                             </Link>
