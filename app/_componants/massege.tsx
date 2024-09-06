@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../_config/firebase';
 import { MdDelete } from "react-icons/md";
 
-function Massege(props: { name: string, id: string, value: string, mass: any, l222l: boolean }) {
+function Massege(props: { name: string, id: string, value: string, mass: any, l222l: boolean , key:string }) {
 
     let user: any = useContext(Data);
 
