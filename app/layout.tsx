@@ -52,7 +52,7 @@ console.log("signed")
     return () => {
       isloged()
     }
-  }, [])
+  }, [user2])
 
   let [l222l, setl222l] = useState(false)
 
