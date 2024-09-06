@@ -26,19 +26,21 @@ function page({ params }: any) {
             test()
         }
     }, [])
-    const [object, setObject]: any = useState({})
+    const [object, setObject]: any = useState(null)
     const user3: any = useContext(Data)
     const getData = async () => {
         let post = await (await getDoc((doc(db, "posts", `${params.postid}`)))).data();
         setObject(post)
     }
 
-    console.log("this is" , params.postid)
     useEffect(() => {
-        return () => {
+    console.log("this is" , params.postid)
+      if (object !== null){
+            return () => {
             getData();
         }
-    }, [params.postid])
+      }
+    }, [])
 
     let [l222l, setl222l] = useState(false)
 
