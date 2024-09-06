@@ -8,7 +8,7 @@ import { createContext, Suspense, useEffect, useState } from "react";
 import { auth, db } from "./_config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import DATRA from "./_context/Context";
+import DATRA, { Data } from "./_context/Context";
 
 const inter = Roboto({
   subsets: ["latin"],
@@ -28,9 +28,10 @@ export default function RootLayout({ children }: any) {
 
 
   useEffect(() => {
+    let user2 = useContext(Data)
     const isloged = () => onAuthStateChanged(auth, (user) => {
       let l: any = localStorage.getItem("darkmode")
-      if (user) {
+      if (user || user2 !== null || user2 !== undefined ) {
         setData(true)
 
         if (!localStorage.getItem("likes")) {
