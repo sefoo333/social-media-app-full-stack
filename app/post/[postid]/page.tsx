@@ -53,8 +53,8 @@ function page({ params }: any) {
     return (
         <div className='w-full h-screen flex justify-center items-center'>
             <Post
-                key={objectt.id}
-                                                    you={user3[0].id}
+                key={objectt?.id}
+                                                    you={user3[0]?.id}
                 username={user3[0]?.username}
                 imageofuser={user3[0]?.image}
                 imageofpublisher={objectt.imageofpublisher}
