@@ -38,4 +38,4 @@ Hello there ,  **sefoomedia** is a modern, responsive web application built to m
    The application should now be running on `http://localhost:3000`.
 
 
-Developed by [linkedin.com/in/sefoo333](Seifeldeen Ali Mohamed)
+Developed by [Seifeldeen Ali Mohamed](https://www.linkedin.com/in/sefoo333/)
