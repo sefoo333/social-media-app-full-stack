@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# sefoomedia app full stack 🕋
 
-First, run the development server:
+Hello there ,  **sefoomedia** is a modern, responsive web application built to mimic core social media features, combining a powerful RESTful API backend by firebase with an interactive Next.js/React.js frontend.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features 🚀
+**User Authentication:** Secure signup & login using JWT (JSON Web Tokens).
+**Profile Management:** Edit user data, including profile picture, username, and bio.
+**Post System:** Create, read, update, and delete posts containing text, images, and more.
+**Friend Feed:** View posts from friends or followed users.
+**Real-time Interactions:** Like and comment on posts for engaging social experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies ⚙️
+- Next.js
+- React.js
+- TypeScript
+- Tailwind css
+- Firebase
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## installation Guide ⚒️
+1. **Clone the Repository**:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   git clone https://github.com/sefoo333/social-media-app-full-stack.git
+   cd social-media-app-full-stack/
+   ```
 
-## Learn More
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Start the Application**:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   The application should now be running on `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Developed by [Seifeldeen Ali Mohamed](linkedin.com/in/sefoo333)
