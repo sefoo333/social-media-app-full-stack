@@ -1,5 +1,5 @@
 
-# sefoomedia app full stack 🕋
+# sefoomedia app full stack 📱
 
 Hello there ,  **sefoomedia** is a modern, responsive web application built to mimic core social media features, combining a powerful RESTful API backend by firebase with an interactive Next.js/React.js frontend.
 
@@ -38,4 +38,4 @@ Hello there ,  **sefoomedia** is a modern, responsive web application built to m
    The application should now be running on `http://localhost:3000`.
 
 
-Developed by [Seifeldeen Ali Mohamed](linkedin.com/in/sefoo333)
+Developed by [linkedin.com/in/sefoo333](Seifeldeen Ali Mohamed)
